@@ -1,783 +1,875 @@
-import React, { useState, useEffect } from 'react';
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portofolio UI/UX Interaktif</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 
-// Data dummy untuk proyek-proyek Anda
-// Anda bisa mengganti ini dengan data proyek Anda yang sebenarnya
-const projectsData = [
-  {
-    id: 'ecommerce-app',
-    title: 'Aplikasi E-commerce Seluler',
-    category: 'Aplikasi Mobile',
-    shortDescription: 'Desain ulang pengalaman berbelanja seluler untuk meningkatkan konversi dan kepuasan pengguna. Fokus pada navigasi intuitif dan proses checkout yang disederhanakan.',
-    imageUrl: 'https://placehold.co/400x300/E0E7FF/4338CA?text=Proyek+E-commerce',
-    detail: {
-      overview: {
-        role: 'Lead UI/UX Designer',
-        duration: '4 Bulan (Jan - Apr 2024)',
-        client: 'Startup RetailX',
-        tools: 'Figma, Miro, UsabilityHub',
-        summary: 'Proyek ini melibatkan perancangan ulang menyeluruh aplikasi e-commerce seluler untuk meningkatkan pengalaman pengguna, mengurangi tingkat pentalan, dan mendorong penjualan. Fokus utama adalah pada penyederhanaan alur pembelian dan peningkatan visual antarmuka.'
-      },
-      problem: 'Pengguna mengalami kesulitan dalam menemukan produk yang relevan dan proses checkout yang rumit, menyebabkan tingkat konversi yang rendah dan banyak keranjang belanja yang ditinggalkan. Antarmuka yang usang juga tidak menarik bagi target pasar yang lebih muda.',
-      goals: [
-        'Meningkatkan tingkat konversi checkout sebesar 20% dalam 6 bulan.',
-        'Mengurangi tingkat pentalan di halaman produk sebesar 15%.',
-        'Meningkatkan kepuasan pengguna (NPS) sebesar 10 poin.'
-      ],
-      designProcess: {
-        research: {
-          text: 'Melakukan wawancara mendalam dengan 15 pengguna, survei online kepada 200 responden, dan analisis kompetitor terhadap 5 aplikasi e-commerce terkemuka. Temuan kunci menunjukkan bahwa navigasi yang kompleks dan kurangnya filter pencarian yang efektif adalah hambatan utama.',
-          images: [
-            'https://placehold.co/300x200/E0E7FF/4338CA?text=Persona+Pengguna',
-            'https://placehold.co/300x200/E0E7FF/4338CA?text=User+Journey+Map'
-          ]
-        },
-        ideation: {
-          text: 'Mengadakan sesi brainstorming dengan tim produk dan teknik. Membuat user flow baru untuk alur pembelian yang lebih efisien dan sitemap yang disederhanakan. Mengembangkan beberapa konsep awal untuk tampilan dan nuansa aplikasi.',
-          images: [
-            'https://placehold.co/300x200/D1FAE5/065F46?text=User+Flow+Baru',
-            'https://placehold.co/300x200/D1FAE5/065F46?text=Sketsa+Awal'
-          ]
-        },
-        wireframing: {
-          text: 'Membuat wireframe low-fidelity untuk menguji tata letak dasar dan penempatan elemen. Kemudian, mengembangkan wireframe high-fidelity yang lebih detail untuk menyempurnakan struktur dan hierarki informasi sebelum masuk ke desain visual.',
-          images: [
-            'https://placehold.co/300x200/FFFBEB/92400E?text=Wireframe+Low-Fi',
-            'https://placehold.co/300x200/FFFBEB/92400E?text=Wireframe+High-Fi'
-          ]
-        },
-        uiDesign: {
-          text: 'Menerapkan design system yang baru dengan palet warna yang segar, tipografi yang mudah dibaca, dan ikonografi yang konsisten. Membuat mockup interaktif untuk semua layar kunci, termasuk halaman produk, keranjang, dan checkout. Fokus pada estetika modern dan pengalaman sentuhan yang responsif.',
-          images: [
-            'https://placehold.co/600x400/E0E7FF/4338CA?text=Mockup+UI+Utama',
-            'https://placehold.co/600x400/D1FAE5/065F46?text=Mockup+UI+Checkout'
-          ]
-        },
-        testing: {
-          text: 'Melakukan pengujian kegunaan dengan 10 pengguna target. Mengidentifikasi beberapa titik gesekan kecil dalam alur checkout dan navigasi filter. Melakukan iterasi desain berdasarkan umpan balik ini, termasuk penyesuaian penempatan tombol dan label.',
-          images: [
-            'https://placehold.co/300x200/FFFBEB/92400E?text=Hasil+Usability+Test'
-          ]
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
         }
-      },
-      solution: {
-        text: 'Solusi yang diimplementasikan mencakup navigasi tab yang disederhanakan, filter pencarian yang diperbarui, dan alur checkout 3 langkah yang intuitif. Kami juga memperkenalkan fitur "Rekomendasi Cerdas" berdasarkan riwayat pembelian pengguna.',
-        images: [
-          'https://placehold.co/600x400/E0E7FF/4338CA?text=Solusi+Desain+Final+1',
-          'https://placehold.co/600x400/D1FAE5/065F46?text=Solusi+Desain+Final+2'
-        ],
-        features: [
-          'Navigasi tab bawah yang intuitif dan mudah diakses.',
-          'Filter pencarian produk yang canggih dengan opsi multi-seleksi.',
-          'Proses checkout 3 langkah yang ringkas dan visual.',
-          'Integrasi rekomendasi produk personalisasi.'
-        ]
-      },
-      outcomes: {
-        metrics: [
-          { label: 'Peningkatan Konversi Checkout', value: '+22%', description: 'Peningkatan tingkat konversi setelah peluncuran desain baru.' },
-          { label: 'Penurunan Tingkat Pentalan', value: '-18%', description: 'Penurunan tingkat pentalan di halaman produk.' }
-        ],
-        chartData: {
-          labels: ['Sebelum', 'Sesudah'],
-          datasets: [{
-            label: 'Tingkat Konversi (%)',
-            data: [12, 19],
-            backgroundColor: ['rgba(252, 165, 165, 0.6)', 'rgba(134, 239, 172, 0.6)'],
-            borderColor: ['rgb(252, 165, 165)', 'rgb(134, 239, 172)'],
-            borderWidth: 1
-          }]
-        },
-        chartTitle: 'Dampak Desain pada Tingkat Konversi'
-      },
-      learnings: {
-        main: [
-          'Pentingnya validasi awal asumsi desain melalui pengujian prototipe low-fidelity.',
-          'Kolaborasi erat dengan tim pengembangan sejak awal proyek untuk memahami batasan teknis.'
-        ],
-        challenges: 'Salah satu tantangan adalah mengintegrasikan fitur rekomendasi produk yang kompleks dengan API yang ada. Kami mengatasinya dengan sesi perencanaan teknis yang intensif dan iterasi desain yang fleksibel.',
-        future: [
-          'Mengembangkan fitur daftar keinginan yang lebih canggih.',
-          'Melakukan A/B testing pada berbagai variasi halaman produk untuk optimasi berkelanjutan.'
-        ]
-      }
-    }
-  },
-  {
-    id: 'dashboard-saas',
-    title: 'Dashboard Analitik SaaS',
-    category: 'Aplikasi Web',
-    shortDescription: 'Menciptakan antarmuka dashboard yang bersih dan efisien untuk platform analitik SaaS, berfokus pada visualisasi data yang jelas dan kustomisasi.',
-    imageUrl: 'https://placehold.co/400x300/D1FAE5/065F46?text=Proyek+Dashboard',
-    detail: {
-      overview: {
-        role: 'UI/UX Designer',
-        duration: '3 Bulan (Mar - Mei 2024)',
-        client: 'Software Solutions Inc.',
-        tools: 'Figma, Chart.js, Google Analytics',
-        summary: 'Proyek ini berfokus pada perancangan ulang dashboard analitik untuk platform SaaS, dengan tujuan membuat data lebih mudah dicerna dan memberikan kemampuan kustomisasi yang lebih baik kepada pengguna akhir.'
-      },
-      problem: 'Dashboard yang ada terlalu padat informasi, sulit dinavigasi, dan kurang memberikan insight yang cepat bagi pengguna. Pengguna merasa kewalahan dengan banyaknya metrik tanpa konteks yang jelas.',
-      goals: [
-        'Meningkatkan kepuasan pengguna dashboard sebesar 25%.',
-        'Mengurangi waktu yang dibutuhkan pengguna untuk menemukan insight kunci sebesar 30%.',
-        'Meningkatkan adopsi fitur kustomisasi dashboard sebesar 10%.'
-      ],
-      designProcess: {
-        research: {
-          text: 'Melakukan analisis log penggunaan dashboard yang ada dan wawancara dengan 8 manajer produk dan analis data. Ditemukan bahwa visualisasi yang tidak konsisten dan kurangnya hierarki informasi adalah masalah utama.',
-          images: [
-            'https://placehold.co/300x200/D1FAE5/065F46?text=Analisis+Penggunaan',
-            'https://placehold.co/300x200/D1FAE5/065F46?text=Kutipan+Pengguna'
-          ]
-        },
-        ideation: {
-          text: 'Mengembangkan beberapa konsep tata letak dashboard yang berbeda, berfokus pada modularitas dan kemampuan kustomisasi. Membuat user flow untuk proses penambahan dan pengaturan widget.',
-          images: [
-            'https://placehold.co/300x200/E0E7FF/4338CA?text=Konsep+Dashboard',
-            'https://placehold.co/300x200/E0E7FF/4338CA?text=User+Flow+Widget'
-          ]
-        },
-        wireframing: {
-          text: 'Membuat wireframe high-fidelity untuk setiap modul dashboard dan alur kustomisasi. Fokus pada penempatan elemen yang logis dan konsisten di seluruh dashboard.',
-          images: [
-            'https://placehold.co/300x200/FFFBEB/92400E?text=Wireframe+Dashboard+1',
-            'https://placehold.co/300x200/FFFBEB/92400E?text=Wireframe+Dashboard+2'
-          ]
-        },
-        uiDesign: {
-          text: 'Merancang antarmuka yang bersih dan minimalis dengan fokus pada kejelasan data. Menggunakan palet warna yang tenang dan konsisten untuk visualisasi data. Membuat prototipe interaktif untuk menguji pengalaman kustomisasi dashboard.',
-          images: [
-            'https://placehold.co/600x400/D1FAE5/065F46?text=Mockup+Dashboard+Final',
-            'https://placehold.co/600x400/E0E7FF/4338CA?text=Mockup+Kustomisasi'
-          ]
-        },
-        testing: {
-          text: 'Melakukan pengujian kegunaan jarak jauh dengan 7 pengguna. Ditemukan bahwa beberapa label widget perlu diperjelas dan proses penyimpanan tata letak kustom bisa lebih intuitif. Melakukan iterasi berdasarkan umpan balik ini.',
-          images: [
-            'https://placehold.co/300x200/FFFBEB/92400E?text=Hasil+Test+Dashboard'
-          ]
+        .tab-button.active {
+            border-color: #0D9488; /* Teal-600 */
+            color: #0D9488;
+            background-color: #F0FDFA; /* Teal-50 */
         }
-      },
-      solution: {
-        text: 'Solusi yang diimplementasikan adalah dashboard modular dengan drag-and-drop widget, filter data yang canggih, dan visualisasi yang diperbarui. Pengguna kini dapat membuat tampilan dashboard yang dipersonalisasi sesuai kebutuhan mereka.',
-        images: [
-          'https://placehold.co/600x400/D1FAE5/065F46?text=Solusi+Dashboard+Final+1',
-          'https://placehold.co/600x400/E0E7FF/4338CA?text=Solusi+Dashboard+Final+2'
-        ],
-        features: [
-          'Dashboard modular yang dapat disesuaikan dengan widget drag-and-drop.',
-          'Filter data yang intuitif dan cepat untuk analisis mendalam.',
-          'Visualisasi data yang ditingkatkan dengan kejelasan dan konsistensi.',
-          'Fitur ekspor laporan yang mudah digunakan.'
-        ]
-      },
-      outcomes: {
-        metrics: [
-          { label: 'Peningkatan Adopsi Kustomisasi', value: '+15%', description: 'Peningkatan pengguna yang mengkustomisasi dashboard mereka.' },
-          { label: 'Penurunan Waktu Analisis', value: '-25%', description: 'Pengurangan waktu rata-rata untuk menemukan insight kunci.' }
-        ],
-        chartData: {
-          labels: ['Sebelum', 'Sesudah'],
-          datasets: [{
-            label: 'Waktu Analisis (menit)',
-            data: [10, 7.5],
-            backgroundColor: ['rgba(252, 165, 165, 0.6)', 'rgba(134, 239, 172, 0.6)'],
-            borderColor: ['rgb(252, 165, 165)', 'rgb(134, 239, 172)'],
-            borderWidth: 1
-          }]
-        },
-        chartTitle: 'Dampak Desain pada Waktu Analisis'
-      },
-      learnings: {
-        main: [
-          'Pentingnya pengujian iteratif dengan data nyata untuk visualisasi yang efektif.',
-          'Kompleksitas dalam merancang sistem kustomisasi yang kuat namun sederhana untuk pengguna.'
-        ],
-        challenges: 'Salah satu tantangan adalah memastikan performa dashboard tetap cepat meskipun dengan banyak widget aktif. Kami mengatasinya dengan mengoptimalkan pemanggilan API dan rendering komponen.',
-        future: [
-          'Menambahkan integrasi dengan sumber data pihak ketiga.',
-          'Mengembangkan fitur notifikasi cerdas berdasarkan anomali data.'
-        ]
-      }
-    }
-  },
-  {
-    id: 'company-website',
-    title: 'Redesign Situs Web Perusahaan',
-    category: 'Desain Web',
-    shortDescription: 'Memperbarui situs web perusahaan dengan fokus pada pengalaman pengguna yang modern dan menarik, serta peningkatan konversi prospek.',
-    imageUrl: 'https://placehold.co/400x300/FFFBEB/92400E?text=Proyek+Website',
-    detail: {
-      overview: {
-        role: 'UI/UX Designer',
-        duration: '2 Bulan (Feb - Apr 2024)',
-        client: 'Global Tech Co.',
-        tools: 'Figma, Webflow, Hotjar',
-        summary: 'Proyek ini bertujuan untuk merancang ulang situs web perusahaan untuk mencerminkan citra merek yang lebih modern, meningkatkan keterlibatan pengunjung, dan mengoptimalkan alur konversi prospek.'
-      },
-      problem: 'Situs web lama terlihat usang, navigasinya membingungkan, dan tidak efektif dalam mengkomunikasikan nilai perusahaan. Tingkat konversi formulir kontak sangat rendah.',
-      goals: [
-        'Meningkatkan keterlibatan pengunjung (waktu di situs, halaman per sesi) sebesar 30%.',
-        'Meningkatkan tingkat pengisian formulir kontak sebesar 10%.',
-        'Menciptakan citra merek yang lebih modern dan profesional.'
-      ],
-      designProcess: {
-        research: {
-          text: 'Melakukan analisis heatmap dan rekaman sesi menggunakan Hotjar pada situs lama. Mengidentifikasi area di mana pengguna sering tersesat atau meninggalkan situs. Melakukan survei singkat untuk memahami persepsi merek saat ini.',
-          images: [
-            'https://placehold.co/300x200/FFFBEB/92400E?text=Heatmap+Analisis',
-            'https://placehold.co/300x200/FFFBEB/92400E?text=Hasil+Survei'
-          ]
-        },
-        ideation: {
-          text: 'Mengembangkan strategi konten baru dan sitemap yang disederhanakan. Membuat sketsa awal untuk tata letak halaman utama dan halaman layanan. Mengadakan sesi brainstorming untuk ide-ide visual yang segar.',
-          images: [
-            'https://placehold.co/300x200/E0E7FF/4338CA?text=Sitemap+Baru',
-            'https://placehold.co/300x200/E0E7FF/4338CA?text=Sketsa+Halaman'
-          ]
-        },
-        wireframing: {
-          text: 'Membuat wireframe high-fidelity untuk semua halaman kunci, termasuk beranda, halaman layanan, tentang kami, dan kontak. Fokus pada hierarki visual yang jelas dan *call-to-action* yang menonjol.',
-          images: [
-            'https://placehold.co/300x200/D1FAE5/065F46?text=Wireframe+Beranda',
-            'https://placehold.co/300x200/D1FAE5/065F46?text=Wireframe+Layanan'
-          ]
-        },
-        uiDesign: {
-          text: 'Menerapkan desain visual yang bersih, minimalis, dan modern dengan fokus pada tipografi yang kuat dan penggunaan ruang putih yang efektif. Membuat prototipe interaktif untuk alur konversi formulir dan navigasi utama.',
-          images: [
-            'https://placehold.co/600x400/FFFBEB/92400E?text=Mockup+Beranda+Final',
-            'https://placehold.co/600x400/E0E7FF/4338CA?text=Mockup+Halaman+Kontak'
-          ]
-        },
-        testing: {
-          text: 'Melakukan A/B testing pada beberapa variasi *hero section* dan *call-to-action*. Menganalisis data dari Hotjar setelah peluncuran awal untuk mengidentifikasi area yang perlu dioptimalkan lebih lanjut.',
-          images: [
-            'https://placehold.co/300x200/D1FAE5/065F46?text=Hasil+A/B+Test'
-          ]
+        .tab-button {
+            border-color: #D6D3D1; /* Stone-300 */
         }
-      },
-      solution: {
-        text: 'Solusi yang diimplementasikan adalah situs web dengan desain responsif penuh, navigasi yang disederhanakan, dan konten yang lebih fokus pada nilai bagi pengguna. Kami juga memperkenalkan ilustrasi kustom dan animasi mikro untuk meningkatkan daya tarik visual.',
-        images: [
-          'https://placehold.co/600x400/FFFBEB/92400E?text=Solusi+Website+Final+1',
-          'https://placehold.co/600x400/E0E7FF/4338CA?text=Solusi+Website+Final+2'
-        ],
-        features: [
-          'Desain responsif penuh untuk pengalaman lintas perangkat yang mulus.',
-          'Navigasi utama yang intuitif dan hierarki informasi yang jelas.',
-          'Integrasi formulir kontak yang dioptimalkan untuk konversi.',
-          'Penggunaan ilustrasi kustom dan animasi mikro untuk daya tarik visual.'
-        ]
-      },
-      outcomes: {
-        metrics: [
-          { label: 'Peningkatan Waktu di Situs', value: '+35%', description: 'Peningkatan waktu rata-rata pengunjung di situs.' },
-          { label: 'Peningkatan Pengisian Formulir', value: '+12%', description: 'Peningkatan tingkat pengisian formulir kontak.' }
-        ],
-        chartData: {
-          labels: ['Sebelum', 'Sesudah'],
-          datasets: [{
-            label: 'Tingkat Pengisian Formulir (%)',
-            data: [5, 7],
-            backgroundColor: ['rgba(252, 165, 165, 0.6)', 'rgba(134, 239, 172, 0.6)'],
-            borderColor: ['rgb(252, 165, 165)', 'rgb(134, 239, 172)'],
-            borderWidth: 1
-          }]
-        },
-        chartTitle: 'Dampak Desain pada Pengisian Formulir'
-      },
-      learnings: {
-        main: [
-          'Pentingnya konten yang ringkas dan berorientasi pada manfaat bagi pengguna.',
-          'Nilai dari visualisasi data perilaku pengguna (heatmap, rekaman sesi) dalam mengidentifikasi masalah.'
-        ],
-        challenges: 'Mengelola ekspektasi stakeholder yang beragam terkait estetika dan fungsionalitas. Kami mengatasinya dengan presentasi prototipe interaktif secara berkala dan sesi umpan balik terstruktur.',
-        future: [
-          'Mengimplementasikan fitur personalisasi konten berdasarkan segmen pengunjung.',
-          'Melakukan audit SEO untuk mengoptimalkan visibilitas situs.'
-        ]
-      }
-    }
-  }
-];
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Example max-width */
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; /* Base height */
+            max-height: 400px; /* Max height */
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .content-section h2 {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 700; /* font-bold */
+            color: #292524; /* Stone-800 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #CCFBF1; /* Teal-100 */
+        }
+        .content-section h3 {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #44403C; /* Stone-700 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 0.75rem; /* mb-3 */
+        }
+        .content-section p, .content-section li {
+            font-size: 1rem; /* text-base */
+            line-height: 1.75; /* leading-relaxed */
+            color: #57534E; /* Stone-600 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-section ul {
+            list-style-position: inside;
+            padding-left: 1rem; /* pl-4 */
+        }
+        .content-section strong {
+            color: #292524; /* Stone-800 */
+            font-weight: 600;
+        }
+        .placeholder-image {
+            background-color: #E7E5E4; /* Stone-200 */
+            border: 1px dashed #A8A29E; /* Stone-400 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #78716C; /* Stone-500 */
+            border-radius: 0.5rem; /* rounded-lg */
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+    <div id="root"></div>
 
-// Komponen Dashboard
-const DashboardPage = ({ onSelectProject }) => {
-  return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Hero Section */}
-      <section className="text-center py-16 bg-gradient-to-r from-teal-500 to-emerald-600 text-white rounded-lg shadow-lg mb-12">
-        <h1 className="text-4xl md:text-5xl font-extrabold mb-4">Halo, Saya [Nama Anda]</h1>
-        <p className="text-lg md:text-xl max-w-2xl mx-auto">Desainer UI/UX yang bersemangat menciptakan pengalaman digital yang intuitif, indah, dan berdampak nyata.</p>
-        <div className="mt-8 flex justify-center space-x-4">
-          <button onClick={() => window.location.href='#projects-section'} className="bg-white text-teal-700 hover:bg-gray-100 px-6 py-3 rounded-full font-semibold shadow-md transition transform hover:scale-105">Lihat Proyek</button>
-          <button onClick={() => window.location.href='#about-section'} className="border border-white text-white hover:bg-white hover:text-teal-700 px-6 py-3 rounded-full font-semibold shadow-md transition transform hover:scale-105">Tentang Saya</button>
-        </div>
-      </section>
-
-      {/* About Me Section */}
-      <section id="about-section" className="bg-white p-8 rounded-lg shadow-md mb-12 border border-stone-200">
-        <h2 className="text-3xl font-bold text-stone-800 mb-6 border-b-2 pb-2 border-teal-100">Tentang Saya</h2>
-        <div className="flex flex-col md:flex-row items-center md:space-x-8">
-          <div className="mb-6 md:mb-0 md:w-1/3">
-            <img src="https://placehold.co/200x200/F0F0F0/888888?text=Foto+Profil" alt="Foto Profil" className="rounded-full mx-auto w-48 h-48 object-cover shadow-lg border-4 border-teal-200" />
-          </div>
-          <div className="md:w-2/3 text-stone-700 leading-relaxed">
-            <p className="mb-4">Saya seorang desainer UI/UX dengan pengalaman [Jumlah] tahun, berdedikasi untuk memecahkan masalah pengguna melalui desain yang berpusat pada manusia. Saya percaya bahwa desain yang baik tidak hanya terlihat indah, tetapi juga berfungsi dengan mulus dan memberikan nilai nyata.</p>
-            <p className="mb-4">Keahlian saya meliputi riset pengguna, pembuatan wireframe dan prototipe, desain antarmuka, pengujian kegunaan, dan kolaborasi erat dengan tim pengembangan. Saya selalu berusaha untuk terus belajar dan beradaptasi dengan tren desain terbaru.</p>
-            <p>Mari terhubung dan diskusikan bagaimana saya dapat membantu proyek Anda berikutnya!</p>
-          </div>
-        </div>
-        <div className="mt-8">
-          <h3 className="text-2xl font-semibold text-stone-700 mb-4">Keahlian Saya</h3>
-          <div className="flex flex-wrap gap-3">
-            <span className="bg-teal-100 text-teal-800 px-4 py-2 rounded-full text-sm font-medium shadow-sm">Riset Pengguna</span>
-            <span className="bg-teal-100 text-teal-800 px-4 py-2 rounded-full text-sm font-medium shadow-sm">Wireframing & Prototyping</span>
-            <span className="bg-teal-100 text-teal-800 px-4 py-2 rounded-full text-sm font-medium shadow-sm">Desain Antarmuka (UI)</span>
-            <span className="bg-teal-100 text-teal-800 px-4 py-2 rounded-full text-sm font-medium shadow-sm">Pengujian Kegunaan (UX)</span>
-            <span className="bg-teal-100 text-teal-800 px-4 py-2 rounded-full text-sm font-medium shadow-sm">Desain Interaksi</span>
-            <span className="bg-teal-100 text-teal-800 px-4 py-2 rounded-full text-sm font-medium shadow-sm">Design Systems</span>
-            <span className="bg-teal-100 text-teal-800 px-4 py-2 rounded-full text-sm font-medium shadow-sm">Figma</span>
-            <span className="bg-teal-100 text-teal-800 px-4 py-2 rounded-full text-sm font-medium shadow-sm">Miro</span>
-            <span className="bg-teal-100 text-teal-800 px-4 py-2 rounded-full text-sm font-medium shadow-sm">Analisis Data</span>
-          </div>
-        </div>
-      </section>
-
-      {/* Projects Section */}
-      <section id="projects-section" className="mb-12">
-        <h2 className="text-3xl font-bold text-stone-800 text-center mb-8 border-b-2 pb-2 border-teal-100">Proyek Pilihan</h2>
-        <p className="text-center text-stone-700 mb-10 max-w-3xl mx-auto">Jelajahi beberapa studi kasus UI/UX saya yang menyoroti proses desain, tantangan, solusi, dan dampak yang dicapai.</p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projectsData.map(project => (
-            <ProjectCard key={project.id} project={project} onSelectProject={onSelectProject} />
-          ))}
-        </div>
-      </section>
-    </div>
-  );
-};
-
-// Komponen Kartu Proyek untuk Dashboard
-const ProjectCard = ({ project, onSelectProject }) => {
-  return (
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden transition-transform duration-300 hover:scale-105 border border-stone-200">
-      <img src={project.imageUrl} alt={project.title} className="w-full h-56 object-cover" />
-      <div className="p-6">
-        <span className="text-sm font-semibold text-teal-600 mb-2 block">{project.category}</span>
-        <h3 className="text-xl font-bold text-stone-800 mb-2">{project.title}</h3>
-        <p className="text-stone-600 text-base mb-4">{project.shortDescription}</p>
-        <button
-          onClick={() => onSelectProject(project.id)}
-          className="bg-teal-600 hover:bg-teal-700 text-white px-5 py-2 rounded-md font-semibold transition-colors duration-200 shadow-md"
-        >
-          Lihat Studi Kasus
-        </button>
-      </div>
-    </div>
-  );
-};
-
-// Komponen Halaman Detail Proyek
-const ProjectDetailPage = ({ projectId, onBack }) => {
-  const project = projectsData.find(p => p.id === projectId);
-  const [activeTab, setActiveTab] = useState('research');
-  const chartRef = React.useRef(null);
-  const chartInstance = React.useRef(null);
-
-  const [improvedDescription, setImprovedDescription] = useState('');
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-
-  // Fungsi untuk memanggil Gemini API
-  const generateImprovedDescription = async () => {
-    setIsGenerating(true);
-    setImprovedDescription('');
-    setShowModal(true);
-
-    const prompt = `Saya memiliki deskripsi proyek UI/UX berikut. Bisakah Anda menyarankan bagaimana saya bisa membuatnya lebih menarik, ringkas, dan berdampak? Fokus pada menyoroti nilai dan hasil. Berikan hanya teks yang sudah diperbaiki, tanpa pengantar atau kesimpulan.
-
-Judul Proyek: ${project.title}
-Deskripsi Singkat: ${project.shortDescription}
-Ringkasan Proyek: ${project.detail.overview.summary}
-
-Saran perbaikan:`;
-
-    let chatHistory = [];
-    chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-    const payload = { contents: chatHistory };
-    const apiKey = "";
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
-    try {
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      const result = await response.json();
-
-      if (result.candidates && result.candidates.length > 0 &&
-          result.candidates[0].content && result.candidates[0].content.parts &&
-          result.candidates[0].content.parts.length > 0) {
-        const text = result.candidates[0].content.parts[0].text;
-        setImprovedDescription(text);
-      } else {
-        setImprovedDescription('Gagal menghasilkan saran. Struktur respons tidak terduga.');
-      }
-    } catch (error) {
-      console.error('Error calling Gemini API:', error);
-      setImprovedDescription('Terjadi kesalahan saat menghubungi API Gemini. Silakan coba lagi.');
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-
-  useEffect(() => {
-    // Pastikan Chart.js sudah dimuat dan tersedia secara global
-    if (window.Chart && project && project.detail.outcomes.chartData) {
-      // Mendaftarkan registerables di sini, setelah Chart tersedia
-      window.Chart.register(...window.Chart.registerables);
-
-      if (chartInstance.current) {
-        chartInstance.current.destroy(); // Hancurkan instance chart sebelumnya jika ada
-      }
-      chartInstance.current = new window.Chart(chartRef.current, { // Menggunakan window.Chart
-        type: 'bar',
-        data: project.detail.outcomes.chartData,
-        options: {
-          responsive: true,
-          maintainAspectRatio: false, // Penting untuk responsivitas di dalam container
-          plugins: {
-            legend: {
-              position: 'top',
-            },
-            title: {
-              display: true,
-              text: project.detail.outcomes.chartTitle || 'Dampak Desain'
-            },
-            tooltip: {
-              callbacks: {
-                title: function(tooltipItems) {
-                  // Memastikan judul tooltip tidak terlalu panjang
-                  return tooltipItems[0].label.length > 16 ? tooltipItems[0].label.substring(0, 13) + '...' : tooltipItems[0].label;
+    <script type="module">
+        // Data dummy untuk proyek-proyek Anda
+        const projectsData = [
+          {
+            id: 'ecommerce-app',
+            title: 'Aplikasi E-commerce Seluler',
+            category: 'Aplikasi Mobile',
+            shortDescription: 'Desain ulang pengalaman berbelanja seluler untuk meningkatkan konversi dan kepuasan pengguna. Fokus pada navigasi intuitif dan proses checkout yang disederhanakan.',
+            imageUrl: 'https://placehold.co/400x300/E0E7FF/4338CA?text=Proyek+E-commerce',
+            detail: {
+              overview: {
+                role: 'Lead UI/UX Designer',
+                duration: '4 Bulan (Jan - Apr 2024)',
+                client: 'Startup RetailX',
+                tools: 'Figma, Miro, UsabilityHub',
+                summary: 'Proyek ini melibatkan perancangan ulang menyeluruh aplikasi e-commerce seluler untuk meningkatkan pengalaman pengguna, mengurangi tingkat pentalan, dan mendorong penjualan. Fokus utama adalah pada penyederhanaan alur pembelian dan peningkatan visual antarmuka.'
+              },
+              problem: 'Pengguna mengalami kesulitan dalam menemukan produk yang relevan dan proses checkout yang rumit, menyebabkan tingkat konversi yang rendah dan banyak keranjang belanja yang ditinggalkan. Antarmuka yang usang juga tidak menarik bagi target pasar yang lebih muda.',
+              goals: [
+                'Meningkatkan tingkat konversi checkout sebesar 20% dalam 6 bulan.',
+                'Mengurangi tingkat pentalan di halaman produk sebesar 15%.',
+                'Meningkatkan kepuasan pengguna (NPS) sebesar 10 poin.'
+              ],
+              designProcess: {
+                research: {
+                  text: 'Melakukan wawancara mendalam dengan 15 pengguna, survei online kepada 200 responden, dan analisis kompetitor terhadap 5 aplikasi e-commerce terkemuka. Temuan kunci menunjukkan bahwa navigasi yang kompleks dan kurangnya filter pencarian yang efektif adalah hambatan utama.',
+                  images: [
+                    'https://placehold.co/300x200/E0E7FF/4338CA?text=Persona+Pengguna',
+                    'https://placehold.co/300x200/E0E7FF/4338CA?text=User+Journey+Map'
+                  ]
                 },
-                label: function(context) {
-                  let label = context.dataset.label || '';
-                  if (label) {
-                    label += ': ';
-                  }
-                  if (context.parsed.y !== null) {
-                    label += context.parsed.y + '%'; // Menambahkan '%' untuk contoh ini
-                  }
-                  return label;
+                ideation: {
+                  text: 'Mengadakan sesi brainstorming dengan tim produk dan teknik. Membuat user flow baru untuk alur pembelian yang lebih efisien dan sitemap yang disederhanakan. Mengembangkan beberapa konsep awal untuk tampilan dan nuansa aplikasi.',
+                  images: [
+                    'https://placehold.co/300x200/D1FAE5/065F46?text=User+Flow+Baru',
+                    'https://placehold.co/300x200/D1FAE5/065F46?text=Sketsa+Awal'
+                  ]
+                },
+                wireframing: {
+                  text: 'Membuat wireframe low-fidelity untuk menguji tata letak dasar dan penempatan elemen. Kemudian, mengembangkan wireframe high-fidelity yang lebih detail untuk menyempurnakan struktur dan hierarki informasi sebelum masuk ke desain visual.',
+                  images: [
+                    'https://placehold.co/300x200/FFFBEB/92400E?text=Wireframe+Low-Fi',
+                    'https://placehold.co/300x200/FFFBEB/92400E?text=Wireframe+High-Fi'
+                  ]
+                },
+                uiDesign: {
+                  text: 'Menerapkan design system yang baru dengan palet warna yang segar, tipografi yang mudah dibaca, dan ikonografi yang konsisten. Membuat mockup interaktif untuk semua layar kunci, termasuk halaman produk, keranjang, dan checkout. Fokus pada estetika modern dan pengalaman sentuhan yang responsif.',
+                  images: [
+                    'https://placehold.co/600x400/E0E7FF/4338CA?text=Mockup+UI+Utama',
+                    'https://placehold.co/600x400/D1FAE5/065F46?text=Mockup+UI+Checkout'
+                  ]
+                },
+                testing: {
+                  text: 'Melakukan pengujian kegunaan dengan 10 pengguna target. Mengidentifikasi beberapa titik gesekan kecil dalam alur checkout dan navigasi filter. Melakukan iterasi desain berdasarkan umpan balik ini, termasuk penyesuaian penempatan tombol dan label.',
+                  images: [
+                    'https://placehold.co/300x200/FFFBEB/92400E?text=Hasil+Usability+Test'
+                  ]
                 }
+              },
+              solution: {
+                text: 'Solusi yang diimplementasikan mencakup navigasi tab yang disederhanakan, filter pencarian yang diperbarui, dan alur checkout 3 langkah yang intuitif. Kami juga memperkenalkan fitur "Rekomendasi Cerdas" berdasarkan riwayat pembelian pengguna.',
+                images: [
+                  'https://placehold.co/600x400/E0E7FF/4338CA?text=Solusi+Desain+Final+1',
+                  'https://placehold.co/600x400/D1FAE5/065F46?text=Solusi+Desain+Final+2'
+                ],
+                features: [
+                  'Navigasi tab bawah yang intuitif dan mudah diakses.',
+                  'Filter pencarian produk yang canggih dengan opsi multi-seleksi.',
+                  'Proses checkout 3 langkah yang ringkas dan visual.',
+                  'Integrasi rekomendasi produk personalisasi.'
+                ]
+              },
+              outcomes: {
+                metrics: [
+                  { label: 'Peningkatan Konversi Checkout', value: '+22%', description: 'Peningkatan tingkat konversi setelah peluncuran desain baru.' },
+                  { label: 'Penurunan Tingkat Pentalan', value: '-18%', description: 'Penurunan tingkat pentalan di halaman produk.' }
+                ],
+                chartData: {
+                  labels: ['Sebelum', 'Sesudah'],
+                  datasets: [{
+                    label: 'Tingkat Konversi (%)',
+                    data: [12, 19],
+                    backgroundColor: ['rgba(252, 165, 165, 0.6)', 'rgba(134, 239, 172, 0.6)'],
+                    borderColor: ['rgb(252, 165, 165)', 'rgb(134, 239, 172)'],
+                    borderWidth: 1
+                  }]
+                },
+                chartTitle: 'Dampak Desain pada Tingkat Konversi'
+              },
+              learnings: {
+                main: [
+                  'Pentingnya validasi awal asumsi desain melalui pengujian prototipe low-fidelity.',
+                  'Kolaborasi erat dengan tim pengembangan sejak awal proyek untuk memahami batasan teknis.'
+                ],
+                challenges: 'Salah satu tantangan adalah mengintegrasikan fitur rekomendasi produk yang kompleks dengan API yang ada. Kami mengatasinya dengan sesi perencanaan teknis yang intensif dan iterasi desain yang fleksibel.',
+                future: [
+                  'Mengembangkan fitur daftar keinginan yang lebih canggih.',
+                  'Melakukan A/B testing pada berbagai variasi halaman produk untuk optimasi berkelanjutan.'
+                ]
               }
             }
           },
-          scales: {
-            y: {
-              beginAtZero: true
+          {
+            id: 'dashboard-saas',
+            title: 'Dashboard Analitik SaaS',
+            category: 'Aplikasi Web',
+            shortDescription: 'Menciptakan antarmuka dashboard yang bersih dan efisien untuk platform analitik SaaS, berfokus pada visualisasi data yang jelas dan kustomisasi.',
+            imageUrl: 'https://placehold.co/400x300/D1FAE5/065F46?text=Proyek+Dashboard',
+            detail: {
+              overview: {
+                role: 'UI/UX Designer',
+                duration: '3 Bulan (Mar - Mei 2024)',
+                client: 'Software Solutions Inc.',
+                tools: 'Figma, Chart.js, Google Analytics',
+                summary: 'Proyek ini berfokus pada perancangan ulang dashboard analitik untuk platform SaaS, dengan tujuan membuat data lebih mudah dicerna dan memberikan kemampuan kustomisasi yang lebih baik kepada pengguna akhir.'
+              },
+              problem: 'Dashboard yang ada terlalu padat informasi, sulit dinavigasi, dan kurang memberikan insight yang cepat bagi pengguna. Pengguna merasa kewalahan dengan banyaknya metrik tanpa konteks yang jelas.',
+              goals: [
+                'Meningkatkan kepuasan pengguna dashboard sebesar 25%.',
+                'Mengurangi waktu yang dibutuhkan pengguna untuk menemukan insight kunci sebesar 30%.',
+                'Meningkatkan adopsi fitur kustomisasi dashboard sebesar 10%.'
+              ],
+              designProcess: {
+                research: {
+                  text: 'Melakukan analisis log penggunaan dashboard yang ada dan wawancara dengan 8 manajer produk dan analis data. Ditemukan bahwa visualisasi yang tidak konsisten dan kurangnya hierarki informasi adalah masalah utama.',
+                  images: [
+                    'https://placehold.co/300x200/D1FAE5/065F46?text=Analisis+Penggunaan',
+                    'https://placehold.co/300x200/D1FAE5/065F46?text=Kutipan+Pengguna'
+                  ]
+                },
+                ideation: {
+                  text: 'Mengembangkan beberapa konsep tata letak dashboard yang berbeda, berfokus pada modularitas dan kemampuan kustomisasi. Membuat user flow untuk proses penambahan dan pengaturan widget.',
+                  images: [
+                    'https://placehold.co/300x200/E0E7FF/4338CA?text=Konsep+Dashboard',
+                    'https://placehold.co/300x200/E0E7FF/4338CA?text=User+Flow+Widget'
+                  ]
+                },
+                wireframing: {
+                  text: 'Membuat wireframe high-fidelity untuk setiap modul dashboard dan alur kustomisasi. Fokus pada penempatan elemen yang logis dan konsisten di seluruh dashboard.',
+                  images: [
+                    'https://placehold.co/300x200/FFFBEB/92400E?text=Wireframe+Dashboard+1',
+                    'https://placehold.co/300x200/FFFBEB/92400E?text=Wireframe+Dashboard+2'
+                  ]
+                },
+                uiDesign: {
+                  text: 'Merancang antarmuka yang bersih dan minimalis dengan fokus pada kejelasan data. Menggunakan palet warna yang tenang dan konsisten untuk visualisasi data. Membuat prototipe interaktif untuk menguji pengalaman kustomisasi dashboard.',
+                  images: [
+                    'https://placehold.co/600x400/D1FAE5/065F46?text=Mockup+Dashboard+Final',
+                    'https://placehold.co/600x400/E0E7FF/4338CA?text=Mockup+Kustomisasi'
+                  ]
+                },
+                testing: {
+                  text: 'Melakukan pengujian kegunaan jarak jauh dengan 7 pengguna. Ditemukan bahwa beberapa label widget perlu diperjelas dan proses penyimpanan tata letak kustom bisa lebih intuitif. Melakukan iterasi berdasarkan umpan balik ini.',
+                  images: [
+                    'https://placehold.co/300x200/FFFBEB/92400E?text=Hasil+Test+Dashboard'
+                  ]
+                }
+              },
+              solution: {
+                text: 'Solusi yang diimplementasikan adalah dashboard modular dengan drag-and-drop widget, filter data yang canggih, dan visualisasi yang diperbarui. Pengguna kini dapat membuat tampilan dashboard yang dipersonalisasi sesuai kebutuhan mereka.',
+                images: [
+                  'https://placehold.co/600x400/D1FAE5/065F46?text=Solusi+Dashboard+Final+1',
+                  'https://placehold.co/600x400/E0E7FF/4338CA?text=Solusi+Dashboard+Final+2'
+                ],
+                features: [
+                  'Dashboard modular yang dapat disesuaikan dengan widget drag-and-drop.',
+                  'Filter data yang intuitif dan cepat untuk analisis mendalam.',
+                  'Visualisasi data yang ditingkatkan dengan kejelasan dan konsistensi.',
+                  'Fitur ekspor laporan yang mudah digunakan.'
+                ]
+              },
+              outcomes: {
+                metrics: [
+                  { label: 'Peningkatan Adopsi Kustomisasi', value: '+15%', description: 'Peningkatan pengguna yang mengkustomisasi dashboard mereka.' },
+                  { label: 'Penurunan Waktu Analisis', value: '-25%', description: 'Pengurangan waktu rata-rata untuk menemukan insight kunci.' }
+                ],
+                chartData: {
+                  labels: ['Sebelum', 'Sesudah'],
+                  datasets: [{
+                    label: 'Waktu Analisis (menit)',
+                    data: [10, 7.5],
+                    backgroundColor: ['rgba(252, 165, 165, 0.6)', 'rgba(134, 239, 172, 0.6)'],
+                    borderColor: ['rgb(252, 165, 165)', 'rgb(134, 239, 172)'],
+                    borderWidth: 1
+                  }]
+                },
+                chartTitle: 'Dampak Desain pada Waktu Analisis'
+              },
+              learnings: {
+                main: [
+                  'Pentingnya pengujian iteratif dengan data nyata untuk visualisasi yang efektif.',
+                  'Kompleksitas dalam merancang sistem kustomisasi yang kuat namun sederhana untuk pengguna.'
+                ],
+                challenges: 'Salah satu tantangan adalah memastikan performa dashboard tetap cepat meskipun dengan banyak widget aktif. Kami mengatasinya dengan mengoptimalkan pemanggilan API dan rendering komponen.',
+                future: [
+                  'Menambahkan integrasi dengan sumber data pihak ketiga.',
+                  'Mengembangkan fitur notifikasi cerdas berdasarkan anomali data.'
+                ]
+              }
+            }
+          },
+          {
+            id: 'company-website',
+            title: 'Redesign Situs Web Perusahaan',
+            category: 'Desain Web',
+            shortDescription: 'Memperbarui situs web perusahaan dengan fokus pada pengalaman pengguna yang modern dan menarik, serta peningkatan konversi prospek.',
+            imageUrl: 'https://placehold.co/400x300/FFFBEB/92400E?text=Proyek+Website',
+            detail: {
+              overview: {
+                role: 'UI/UX Designer',
+                duration: '2 Bulan (Feb - Apr 2024)',
+                client: 'Global Tech Co.',
+                tools: 'Figma, Webflow, Hotjar',
+                summary: 'Proyek ini bertujuan untuk merancang ulang situs web perusahaan untuk mencerminkan citra merek yang lebih modern, meningkatkan keterlibatan pengunjung, dan mengoptimalkan alur konversi prospek.'
+              },
+              problem: 'Situs web lama terlihat usang, navigasinya membingungkan, dan tidak efektif dalam mengkomunikasikan nilai perusahaan. Tingkat konversi formulir kontak sangat rendah.',
+              goals: [
+                'Meningkatkan keterlibatan pengunjung (waktu di situs, halaman per sesi) sebesar 30%.',
+                'Meningkatkan tingkat pengisian formulir kontak sebesar 10%.',
+                'Menciptakan citra merek yang lebih modern dan profesional.'
+              ],
+              designProcess: {
+                research: {
+                  text: 'Melakukan analisis heatmap dan rekaman sesi menggunakan Hotjar pada situs lama. Mengidentifikasi area di mana pengguna sering tersesat atau meninggalkan situs. Melakukan survei singkat untuk memahami persepsi merek saat ini.',
+                  images: [
+                    'https://placehold.co/300x200/FFFBEB/92400E?text=Heatmap+Analisis',
+                    'https://placehold.co/300x200/FFFBEB/92400E?text=Hasil+Survei'
+                  ]
+                },
+                ideation: {
+                  text: 'Mengembangkan strategi konten baru dan sitemap yang disederhanakan. Membuat sketsa awal untuk tata letak halaman utama dan halaman layanan. Mengadakan sesi brainstorming untuk ide-ide visual yang segar.',
+                  images: [
+                    'https://placehold.co/300x200/E0E7FF/4338CA?text=Sitemap+Baru',
+                    'https://placehold.co/300x200/E0E7FF/4338CA?text=Sketsa+Halaman'
+                  ]
+                },
+                wireframing: {
+                  text: 'Membuat wireframe high-fidelity untuk semua halaman kunci, termasuk beranda, halaman layanan, tentang kami, dan kontak. Fokus pada hierarki visual yang jelas dan *call-to-action* yang menonjol.',
+                  images: [
+                    'https://placehold.co/300x200/D1FAE5/065F46?text=Wireframe+Beranda',
+                    'https://placehold.co/300x200/D1FAE5/065F46?text=Wireframe+Layanan'
+                  ]
+                },
+                uiDesign: {
+                  text: 'Menerapkan desain visual yang bersih, minimalis, dan modern dengan fokus pada tipografi yang kuat dan penggunaan ruang putih yang efektif. Membuat prototipe interaktif untuk alur konversi formulir dan navigasi utama.',
+                  images: [
+                    'https://placehold.co/600x400/FFFBEB/92400E?text=Mockup+Beranda+Final',
+                    'https://placehold.co/600x400/E0E7FF/4338CA?text=Mockup+Halaman+Kontak'
+                  ]
+                },
+                testing: {
+                  text: 'Melakukan A/B testing pada beberapa variasi *hero section* dan *call-to-action*. Menganalisis data dari Hotjar setelah peluncuran awal untuk mengidentifikasi area yang perlu dioptimalkan lebih lanjut.',
+                  images: [
+                    'https://placehold.co/300x200/D1FAE5/065F46?text=Hasil+A/B+Test'
+                  ]
+                }
+              },
+              solution: {
+                text: 'Solusi yang diimplementasikan adalah situs web dengan desain responsif penuh, navigasi yang disederhanakan, dan konten yang lebih fokus pada nilai bagi pengguna. Kami juga memperkenalkan ilustrasi kustom dan animasi mikro untuk meningkatkan daya tarik visual.',
+                images: [
+                  'https://placehold.co/600x400/FFFBEB/92400E?text=Solusi+Website+Final+1',
+                  'https://placehold.co/600x400/E0E7FF/4338CA?text=Solusi+Website+Final+2'
+                ],
+                features: [
+                  'Desain responsif penuh untuk pengalaman lintas perangkat yang mulus.',
+                  'Navigasi utama yang intuitif dan hierarki informasi yang jelas.',
+                  'Integrasi formulir kontak yang dioptimalkan untuk konversi.',
+                  'Penggunaan ilustrasi kustom dan animasi mikro untuk daya tarik visual.'
+                ]
+              },
+              outcomes: {
+                metrics: [
+                  { label: 'Peningkatan Waktu di Situs', value: '+35%', description: 'Peningkatan waktu rata-rata pengunjung di situs.' },
+                  { label: 'Peningkatan Pengisian Formulir', value: '+12%', description: 'Peningkatan tingkat pengisian formulir kontak.' }
+                ],
+                chartData: {
+                  labels: ['Sebelum', 'Sesudah'],
+                  datasets: [{
+                    label: 'Tingkat Pengisian Formulir (%)',
+                    data: [5, 7],
+                    backgroundColor: ['rgba(252, 165, 165, 0.6)', 'rgba(134, 239, 172, 0.6)'],
+                    borderColor: ['rgb(252, 165, 165)', 'rgb(134, 239, 172)'],
+                    borderWidth: 1
+                  }]
+                },
+                chartTitle: 'Dampak Desain pada Pengisian Formulir'
+              },
+              learnings: {
+                main: [
+                  'Pentingnya konten yang ringkas dan berorientasi pada manfaat bagi pengguna.',
+                  'Nilai dari visualisasi data perilaku pengguna (heatmap, rekaman sesi) dalam mengidentifikasi masalah.'
+                ],
+                challenges: 'Mengelola ekspektasi stakeholder yang beragam terkait estetika dan fungsionalitas. Kami mengatasinya dengan presentasi prototipe interaktif secara berkala dan sesi umpan balik terstruktur.',
+                future: [
+                  'Mengimplementasikan fitur personalisasi konten berdasarkan segmen pengunjung.',
+                  'Melakukan audit SEO untuk mengoptimalkan visibilitas situs.'
+                ]
+              }
             }
           }
-        }
-      });
-    }
-
-    // Membersihkan grafik saat komponen di-unmount
-    return () => {
-      if (chartInstance.current) {
-        chartInstance.current.destroy();
-      }
-    };
-  }, [project]); // Bergantung pada objek proyek untuk re-render chart
-
-  if (!project) {
-    return (
-      <div className="container mx-auto px-4 py-8 text-center text-stone-700">
-        <h2 className="text-3xl font-bold mb-4">Proyek Tidak Ditemukan</h2>
-        <button onClick={onBack} className="bg-teal-600 hover:bg-teal-700 text-white px-5 py-2 rounded-md font-semibold transition-colors duration-200">Kembali ke Dashboard</button>
-      </div>
-    );
-  }
-
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <button onClick={onBack} className="mb-8 flex items-center text-teal-600 hover:text-teal-800 font-semibold transition-colors duration-200">
-        <span className="mr-2">&#8592;</span> Kembali ke Dashboard
-      </button>
-
-      <article className="bg-white p-8 rounded-lg shadow-lg border border-stone-200">
-        {/* Ringkasan Proyek */}
-        <section className="mb-10 pb-6 border-b border-stone-200">
-          <p className="text-sm text-teal-600 font-semibold mb-2">STUDI KASUS UI/UX</p>
-          <h2 className="text-4xl md:text-5xl font-bold text-stone-900 mb-4">{project.title}</h2>
-          <p className="text-lg text-stone-700 mb-8">{project.detail.overview.summary}</p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-stone-700">
-              <div className="bg-stone-50 p-5 rounded-lg shadow-sm border border-stone-100">
-                  <h3 className="text-xl font-semibold text-teal-700 mb-2">Peran Saya</h3>
-                  <p>{project.detail.overview.role}</p>
-              </div>
-              <div className="bg-stone-50 p-5 rounded-lg shadow-sm border border-stone-100">
-                  <h3 className="text-xl font-semibold text-teal-700 mb-2">Durasi Proyek</h3>
-                  <p>{project.detail.overview.duration}</p>
-              </div>
-              <div className="bg-stone-50 p-5 rounded-lg shadow-sm border border-stone-100">
-                  <h3 className="text-xl font-semibold text-teal-700 mb-2">Klien/Perusahaan</h3>
-                  <p>{project.detail.overview.client}</p>
-              </div>
-              <div className="bg-stone-50 p-5 rounded-lg shadow-sm border border-stone-100">
-                  <h3 className="text-xl font-semibold text-teal-700 mb-2">Tools yang Digunakan</h3>
-                  <p>{project.detail.overview.tools}</p>
-              </div>
-          </div>
-          <div className="mt-6 text-center">
-            <button
-              onClick={generateImprovedDescription}
-              className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-md font-semibold transition-colors duration-200 shadow-md flex items-center justify-center mx-auto"
-              disabled={isGenerating}
-            >
-              {isGenerating ? (
-                <>
-                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Menghasilkan...
-                </>
-              ) : (
-                <>
-                  Sempurnakan Deskripsi ✨
-                </>
-              )}
-            </button>
-          </div>
-        </section>
-
-        {/* Modal untuk Deskripsi yang Disempurnakan */}
-        {showModal && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-lg shadow-xl max-w-lg w-full p-6 relative">
-              <h3 className="text-2xl font-bold text-stone-800 mb-4">Saran Perbaikan Deskripsi</h3>
-              {isGenerating ? (
-                <p className="text-stone-600">Sedang menghasilkan saran...</p>
-              ) : (
-                <p className="text-stone-700 leading-relaxed whitespace-pre-wrap">{improvedDescription || 'Tidak ada saran yang dihasilkan.'}</p>
-              )}
-              <button
-                onClick={() => setShowModal(false)}
-                className="mt-6 bg-teal-600 hover:bg-teal-700 text-white px-5 py-2 rounded-md font-semibold transition-colors duration-200"
-              >
-                Tutup
-              </button>
+        ];
+        
+        // Komponen Dashboard
+        const DashboardPage = ({ onSelectProject }) => {
+          return (
+            <div className="container mx-auto px-4 py-8">
+              {/* Hero Section */}
+              <section className="text-center py-16 bg-gradient-to-r from-teal-500 to-emerald-600 text-white rounded-lg shadow-lg mb-12">
+                <h1 className="text-4xl md:text-5xl font-extrabold mb-4">Halo, Saya [Nama Anda]</h1>
+                <p className="text-lg md:text-xl max-w-2xl mx-auto">Desainer UI/UX yang bersemangat menciptakan pengalaman digital yang intuitif, indah, dan berdampak nyata.</p>
+                <div className="mt-8 flex justify-center space-x-4">
+                  <button onClick={() => window.location.href='#projects-section'} className="bg-white text-teal-700 hover:bg-gray-100 px-6 py-3 rounded-full font-semibold shadow-md transition transform hover:scale-105">Lihat Proyek</button>
+                  <button onClick={() => window.location.href='#about-section'} className="border border-white text-white hover:bg-white hover:text-teal-700 px-6 py-3 rounded-full font-semibold shadow-md transition transform hover:scale-105">Tentang Saya</button>
+                </div>
+              </section>
+        
+              {/* About Me Section */}
+              <section id="about-section" className="bg-white p-8 rounded-lg shadow-md mb-12 border border-stone-200">
+                <h2 className="text-3xl font-bold text-stone-800 mb-6 border-b-2 pb-2 border-teal-100">Tentang Saya</h2>
+                <div className="flex flex-col md:flex-row items-center md:space-x-8">
+                  <div className="mb-6 md:mb-0 md:w-1/3">
+                    <img src="https://placehold.co/200x200/F0F0F0/888888?text=Foto+Profil" alt="Foto Profil" className="rounded-full mx-auto w-48 h-48 object-cover shadow-lg border-4 border-teal-200" />
+                  </div>
+                  <div className="md:w-2/3 text-stone-700 leading-relaxed">
+                    <p className="mb-4">Saya seorang desainer UI/UX dengan pengalaman [Jumlah] tahun, berdedikasi untuk memecahkan masalah pengguna melalui desain yang berpusat pada manusia. Saya percaya bahwa desain yang baik tidak hanya terlihat indah, tetapi juga berfungsi dengan mulus dan memberikan nilai nyata.</p>
+                    <p className="mb-4">Keahlian saya meliputi riset pengguna, pembuatan wireframe dan prototipe, desain antarmuka, pengujian kegunaan, dan kolaborasi erat dengan tim pengembangan. Saya selalu berusaha untuk terus belajar dan beradaptasi dengan tren desain terbaru.</p>
+                    <p>Mari terhubung dan diskusikan bagaimana saya dapat membantu proyek Anda berikutnya!</p>
+                  </div>
+                </div>
+                <div className="mt-8">
+                  <h3 className="text-2xl font-semibold text-stone-700 mb-4">Keahlian Saya</h3>
+                  <div className="flex flex-wrap gap-3">
+                    <span className="bg-teal-100 text-teal-800 px-4 py-2 rounded-full text-sm font-medium shadow-sm">Riset Pengguna</span>
+                    <span className="bg-teal-100 text-teal-800 px-4 py-2 rounded-full text-sm font-medium shadow-sm">Wireframing & Prototyping</span>
+                    <span className="bg-teal-100 text-teal-800 px-4 py-2 rounded-full text-sm font-medium shadow-sm">Desain Antarmuka (UI)</span>
+                    <span className="bg-teal-100 text-teal-800 px-4 py-2 rounded-full text-sm font-medium shadow-sm">Pengujian Kegunaan (UX)</span>
+                    <span className="bg-teal-100 text-teal-800 px-4 py-2 rounded-full text-sm font-medium shadow-sm">Desain Interaksi</span>
+                    <span className="bg-teal-100 text-teal-800 px-4 py-2 rounded-full text-sm font-medium shadow-sm">Design Systems</span>
+                    <span className="bg-teal-100 text-teal-800 px-4 py-2 rounded-full text-sm font-medium shadow-sm">Figma</span>
+                    <span className="bg-teal-100 text-teal-800 px-4 py-2 rounded-full text-sm font-medium shadow-sm">Miro</span>
+                    <span className="bg-teal-100 text-teal-800 px-4 py-2 rounded-full text-sm font-medium shadow-sm">Analisis Data</span>
+                  </div>
+                </div>
+              </section>
+        
+              {/* Projects Section */}
+              <section id="projects-section" className="mb-12">
+                <h2 className="text-3xl font-bold text-stone-800 text-center mb-8 border-b-2 pb-2 border-teal-100">Proyek Pilihan</h2>
+                <p className="text-center text-stone-700 mb-10 max-w-3xl mx-auto">Jelajahi beberapa studi kasus UI/UX saya yang menyoroti proses desain, tantangan, solusi, dan dampak yang dicapai.</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {projectsData.map(project => (
+                    <ProjectCard key={project.id} project={project} onSelectProject={onSelectProject} />
+                  ))}
+                </div>
+              </section>
             </div>
-          </div>
-        )}
-
-        {/* Masalah yang Dipecahkan */}
-        <section className="mb-10 pb-6 border-b border-stone-200">
-          <h2 className="text-3xl font-bold text-stone-800 mb-6 border-b-2 pb-2 border-teal-100">Masalah yang Dipecahkan</h2>
-          <p className="text-stone-700 leading-relaxed mb-6">{project.detail.problem}</p>
-          <div className="placeholder-image w-full h-64 mt-6 text-center p-4 rounded-lg flex items-center justify-center text-stone-500 bg-stone-100 border border-stone-300">
-            Visual pendukung untuk masalah (misalnya, data, kutipan pengguna)
-          </div>
-        </section>
-
-        {/* Tujuan Proyek */}
-        <section className="mb-10 pb-6 border-b border-stone-200">
-          <h2 className="text-3xl font-bold text-stone-800 mb-6 border-b-2 pb-2 border-teal-100">Tujuan Proyek</h2>
-          <ul className="list-disc list-inside text-stone-700 leading-relaxed">
-            {project.detail.goals.map((goal, index) => (
-              <li key={index} className="mb-2">{goal}</li>
-            ))}
-          </ul>
-        </section>
-
-        {/* Proses Desain */}
-        <section className="mb-10 pb-6 border-b border-stone-200">
-          <h2 className="text-3xl font-bold text-stone-800 mb-6 border-b-2 pb-2 border-teal-100">Proses Desain Saya</h2>
-          <p className="text-stone-700 leading-relaxed mb-6">Bagian ini menjelaskan langkah-langkah yang saya ambil dalam proses desain proyek ini, dari riset awal hingga pengujian akhir.</p>
-          
-          <div className="mb-4 border-b border-stone-300 flex flex-wrap gap-2 sm:gap-4">
-            {['research', 'ideation', 'wireframing', 'uiDesign', 'testing'].map(tab => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`tab-button py-2 px-3 sm:px-4 text-sm sm:text-base font-medium text-center border-b-2 rounded-t-lg transition-colors duration-200
-                  ${activeTab === tab ? 'active border-teal-600 text-teal-600 bg-teal-50' : 'border-transparent text-stone-600 hover:border-stone-400 hover:text-stone-800'}`}
-              >
-                {tab === 'research' && 'Riset Pengguna'}
-                {tab === 'ideation' && 'Analisis & Ideasi'}
-                {tab === 'wireframing' && 'Wireframing'}
-                {tab === 'uiDesign' && 'Desain UI & Prototyping'}
-                {tab === 'testing' && 'Pengujian'}
+          );
+        };
+        
+        // Komponen Kartu Proyek untuk Dashboard
+        const ProjectCard = ({ project, onSelectProject }) => {
+          return (
+            <div className="bg-white rounded-lg shadow-lg overflow-hidden transition-transform duration-300 hover:scale-105 border border-stone-200">
+              <img src={project.imageUrl} alt={project.title} className="w-full h-56 object-cover" />
+              <div className="p-6">
+                <span className="text-sm font-semibold text-teal-600 mb-2 block">{project.category}</span>
+                <h3 className="text-xl font-bold text-stone-800 mb-2">{project.title}</h3>
+                <p className="text-stone-600 text-base mb-4">{project.shortDescription}</p>
+                <button
+                  onClick={() => onSelectProject(project.id)}
+                  className="bg-teal-600 hover:bg-teal-700 text-white px-5 py-2 rounded-md font-semibold transition-colors duration-200 shadow-md"
+                >
+                  Lihat Studi Kasus
+                </button>
+              </div>
+            </div>
+          );
+        };
+        
+        // Komponen Halaman Detail Proyek
+        const ProjectDetailPage = ({ projectId, onBack }) => {
+          const project = projectsData.find(p => p.id === projectId);
+          const [activeTab, setActiveTab] = useState('research');
+          const chartRef = React.useRef(null);
+          const chartInstance = React.useRef(null);
+        
+          const [improvedDescription, setImprovedDescription] = useState('');
+          const [isGenerating, setIsGenerating] = useState(false);
+          const [showModal, setShowModal] = useState(false);
+        
+          // Fungsi untuk memanggil Gemini API
+          const generateImprovedDescription = async () => {
+            setIsGenerating(true);
+            setImprovedDescription('');
+            setShowModal(true);
+        
+            const prompt = `Saya memiliki deskripsi proyek UI/UX berikut. Bisakah Anda menyarankan bagaimana saya bisa membuatnya lebih menarik, ringkas, dan berdampak? Fokus pada menyoroti nilai dan hasil. Berikan hanya teks yang sudah diperbaiki, tanpa pengantar atau kesimpulan.
+        
+Judul Proyek: ${project.title}
+Deskripsi Singkat: ${project.shortDescription}
+Ringkasan Proyek: ${project.detail.overview.summary}
+        
+Saran perbaikan:`;
+        
+            let chatHistory = [];
+            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+            const payload = { contents: chatHistory };
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+        
+            try {
+              const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+              });
+              const result = await response.json();
+        
+              if (result.candidates && result.candidates.length > 0 &&
+                  result.candidates[0].content && result.candidates[0].content.parts &&
+                  result.candidates[0].content.parts.length > 0) {
+                const text = result.candidates[0].content.parts[0].text;
+                setImprovedDescription(text);
+              } else {
+                setImprovedDescription('Gagal menghasilkan saran. Struktur respons tidak terduga.');
+              }
+            } catch (error) {
+              console.error('Error calling Gemini API:', error);
+              setImprovedDescription('Terjadi kesalahan saat menghubungi API Gemini. Silakan coba lagi.');
+            } finally {
+              setIsGenerating(false);
+            }
+          };
+        
+          useEffect(() => {
+            // Pastikan Chart.js sudah dimuat dan tersedia secara global
+            if (window.Chart && project && project.detail.outcomes.chartData) {
+              // Mendaftarkan registerables di sini, setelah Chart tersedia
+              window.Chart.register(...window.Chart.registerables);
+        
+              if (chartInstance.current) {
+                chartInstance.current.destroy(); // Hancurkan instance chart sebelumnya jika ada
+              }
+              chartInstance.current = new window.Chart(chartRef.current, { // Menggunakan window.Chart
+                type: 'bar',
+                data: project.detail.outcomes.chartData,
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: false, // Penting untuk responsivitas di dalam container
+                  plugins: {
+                    legend: {
+                      position: 'top',
+                    },
+                    title: {
+                      display: true,
+                      text: project.detail.outcomes.chartTitle || 'Dampak Desain'
+                    },
+                    tooltip: {
+                      callbacks: {
+                        title: function(tooltipItems) {
+                          // Memastikan judul tooltip tidak terlalu panjang
+                          return tooltipItems[0].label.length > 16 ? tooltipItems[0].label.substring(0, 13) + '...' : tooltipItems[0].label;
+                        },
+                        label: function(context) {
+                          let label = context.dataset.label || '';
+                          if (label) {
+                            label += ': ';
+                          }
+                          if (context.parsed.y !== null) {
+                            label += context.parsed.y + '%'; // Menambahkan '%' untuk contoh ini
+                          }
+                          return label;
+                        }
+                      }
+                    }
+                  },
+                  scales: {
+                    y: {
+                      beginAtZero: true
+                    }
+                  }
+                }
+              });
+            }
+        
+            // Membersihkan grafik saat komponen di-unmount
+            return () => {
+              if (chartInstance.current) {
+                chartInstance.current.destroy();
+              }
+            };
+          }, [project]); // Bergantung pada objek proyek untuk re-render chart
+        
+          if (!project) {
+            return (
+              <div className="container mx-auto px-4 py-8 text-center text-stone-700">
+                <h2 className="text-3xl font-bold mb-4">Proyek Tidak Ditemukan</h2>
+                <button onClick={onBack} className="bg-teal-600 hover:bg-teal-700 text-white px-5 py-2 rounded-md font-semibold transition-colors duration-200">Kembali ke Dashboard</button>
+              </div>
+            );
+          }
+        
+          return (
+            <div className="container mx-auto px-4 py-8">
+              <button onClick={onBack} className="mb-8 flex items-center text-teal-600 hover:text-teal-800 font-semibold transition-colors duration-200">
+                <span className="mr-2">&#8592;</span> Kembali ke Dashboard
               </button>
-            ))}
-          </div>
-
-          <div className="p-6 bg-stone-50 rounded-b-lg shadow-inner border border-stone-200">
-            {activeTab === 'research' && (
-              <div>
-                <h3 className="text-2xl font-semibold text-stone-700 mb-4">Riset Pengguna</h3>
-                <p className="text-stone-700 leading-relaxed mb-4">{project.detail.designProcess.research.text}</p>
-                <div className="grid md:grid-cols-2 gap-4 mt-4">
-                  {project.detail.designProcess.research.images.map((src, idx) => (
-                    <img key={idx} src={src} alt={`Riset Pengguna ${idx + 1}`} className="w-full h-48 object-cover rounded-md shadow-sm border border-stone-200" />
-                  ))}
+        
+              <article className="bg-white p-8 rounded-lg shadow-lg border border-stone-200">
+                {/* Ringkasan Proyek */}
+                <section className="mb-10 pb-6 border-b border-stone-200">
+                  <p className="text-sm text-teal-600 font-semibold mb-2">STUDI KASUS UI/UX</p>
+                  <h2 className="text-4xl md:text-5xl font-bold text-stone-900 mb-4">{project.title}</h2>
+                  <p className="text-lg text-stone-700 mb-8">{project.detail.overview.summary}</p>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-stone-700">
+                      <div className="bg-stone-50 p-5 rounded-lg shadow-sm border border-stone-100">
+                          <h3 className="text-xl font-semibold text-teal-700 mb-2">Peran Saya</h3>
+                          <p>{project.detail.overview.role}</p>
+                      </div>
+                      <div className="bg-stone-50 p-5 rounded-lg shadow-sm border border-stone-100">
+                          <h3 className="text-xl font-semibold text-teal-700 mb-2">Durasi Proyek</h3>
+                          <p>{project.detail.overview.duration}</p>
+                      </div>
+                      <div className="bg-stone-50 p-5 rounded-lg shadow-sm border border-stone-100">
+                          <h3 className="text-xl font-semibold text-teal-700 mb-2">Klien/Perusahaan</h3>
+                          <p>{project.detail.overview.client}</p>
+                      </div>
+                      <div className="bg-stone-50 p-5 rounded-lg shadow-sm border border-stone-100">
+                          <h3 className="text-xl font-semibold text-teal-700 mb-2">Tools yang Digunakan</h3>
+                          <p>{project.detail.overview.tools}</p>
+                      </div>
+                  </div>
+                  <div className="mt-6 text-center">
+                    <button
+                      onClick={generateImprovedDescription}
+                      className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-md font-semibold transition-colors duration-200 shadow-md flex items-center justify-center mx-auto"
+                      disabled={isGenerating}
+                    >
+                      {isGenerating ? (
+                        <>
+                          <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          Menghasilkan...
+                        </>
+                      ) : (
+                        <>
+                          Sempurnakan Deskripsi ✨
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </section>
+        
+                {/* Modal untuk Deskripsi yang Disempurnakan */}
+                {showModal && (
+                  <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center p-4 z-50">
+                    <div className="bg-white rounded-lg shadow-xl max-w-lg w-full p-6 relative">
+                      <h3 className="text-2xl font-bold text-stone-800 mb-4">Saran Perbaikan Deskripsi</h3>
+                      {isGenerating ? (
+                        <p className="text-stone-600">Sedang menghasilkan saran...</p>
+                      ) : (
+                        <p className="text-stone-700 leading-relaxed whitespace-pre-wrap">{improvedDescription || 'Tidak ada saran yang dihasilkan.'}</p>
+                      )}
+                      <button
+                        onClick={() => setShowModal(false)}
+                        className="mt-6 bg-teal-600 hover:bg-teal-700 text-white px-5 py-2 rounded-md font-semibold transition-colors duration-200"
+                      >
+                        Tutup
+                      </button>
+                    </div>
+                  </div>
+                )}
+        
+                {/* Masalah yang Dipecahkan */}
+                <section className="mb-10 pb-6 border-b border-stone-200">
+                  <h2 className="text-3xl font-bold text-stone-800 mb-6 border-b-2 pb-2 border-teal-100">Masalah yang Dipecahkan</h2>
+                  <p className="text-stone-700 leading-relaxed mb-6">{project.detail.problem}</p>
+                  <div className="placeholder-image w-full h-64 mt-6 text-center p-4 rounded-lg flex items-center justify-center text-stone-500 bg-stone-100 border border-stone-300">
+                    Visual pendukung untuk masalah (misalnya, data, kutipan pengguna)
+                  </div>
+                </section>
+        
+                {/* Tujuan Proyek */}
+                <section className="mb-10 pb-6 border-b border-stone-200">
+                  <h2 className="text-3xl font-bold text-stone-800 mb-6 border-b-2 pb-2 border-teal-100">Tujuan Proyek</h2>
+                  <ul className="list-disc list-inside text-stone-700 leading-relaxed">
+                    {project.detail.goals.map((goal, index) => (
+                      <li key={index} className="mb-2">{goal}</li>
+                    ))}
+                  </ul>
+                </section>
+        
+                {/* Proses Desain */}
+                <section className="mb-10 pb-6 border-b border-stone-200">
+                  <h2 className="text-3xl font-bold text-stone-800 mb-6 border-b-2 pb-2 border-teal-100">Proses Desain Saya</h2>
+                  <p className="text-stone-700 leading-relaxed mb-6">Bagian ini menjelaskan langkah-langkah yang saya ambil dalam proses desain proyek ini, dari riset awal hingga pengujian akhir.</p>
+                  
+                  <div className="mb-4 border-b border-stone-300 flex flex-wrap gap-2 sm:gap-4">
+                    {['research', 'ideation', 'wireframing', 'uiDesign', 'testing'].map(tab => (
+                      <button
+                        key={tab}
+                        onClick={() => setActiveTab(tab)}
+                        className={`tab-button py-2 px-3 sm:px-4 text-sm sm:text-base font-medium text-center border-b-2 rounded-t-lg transition-colors duration-200
+                          ${activeTab === tab ? 'active border-teal-600 text-teal-600 bg-teal-50' : 'border-transparent text-stone-600 hover:border-stone-400 hover:text-stone-800'}`}
+                      >
+                        {tab === 'research' && 'Riset Pengguna'}
+                        {tab === 'ideation' && 'Analisis & Ideasi'}
+                        {tab === 'wireframing' && 'Wireframing'}
+                        {tab === 'uiDesign' && 'Desain UI & Prototyping'}
+                        {tab === 'testing' && 'Pengujian'}
+                      </button>
+                    ))}
+                  </div>
+        
+                  <div className="p-6 bg-stone-50 rounded-b-lg shadow-inner border border-stone-200">
+                    {activeTab === 'research' && (
+                      <div>
+                        <h3 className="text-2xl font-semibold text-stone-700 mb-4">Riset Pengguna</h3>
+                        <p className="text-stone-700 leading-relaxed mb-4">{project.detail.designProcess.research.text}</p>
+                        <div className="grid md:grid-cols-2 gap-4 mt-4">
+                          {project.detail.designProcess.research.images.map((src, idx) => (
+                            <img key={idx} src={src} alt={`Riset Pengguna ${idx + 1}`} className="w-full h-48 object-cover rounded-md shadow-sm border border-stone-200" />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {activeTab === 'ideation' && (
+                      <div>
+                        <h3 className="text-2xl font-semibold text-stone-700 mb-4">Analisis & Ideasi</h3>
+                        <p className="text-stone-700 leading-relaxed mb-4">{project.detail.designProcess.ideation.text}</p>
+                        <div className="grid md:grid-cols-2 gap-4 mt-4">
+                          {project.detail.designProcess.ideation.images.map((src, idx) => (
+                            <img key={idx} src={src} alt={`Analisis & Ideasi ${idx + 1}`} className="w-full h-48 object-cover rounded-md shadow-sm border border-stone-200" />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {activeTab === 'wireframing' && (
+                      <div>
+                        <h3 className="text-2xl font-semibold text-stone-700 mb-4">Wireframing</h3>
+                        <p className="text-stone-700 leading-relaxed mb-4">{project.detail.designProcess.wireframing.text}</p>
+                        <div className="grid md:grid-cols-2 gap-4 mt-4">
+                          {project.detail.designProcess.wireframing.images.map((src, idx) => (
+                            <img key={idx} src={src} alt={`Wireframing ${idx + 1}`} className="w-full h-64 object-cover rounded-md shadow-sm border border-stone-200" />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {activeTab === 'uiDesign' && (
+                      <div>
+                        <h3 className="text-2xl font-semibold text-stone-700 mb-4">Desain UI & Prototyping</h3>
+                        <p className="text-stone-700 leading-relaxed mb-4">{project.detail.designProcess.uiDesign.text}</p>
+                        <div className="grid md:grid-cols-1 gap-4 mt-4">
+                          {project.detail.designProcess.uiDesign.images.map((src, idx) => (
+                            <img key={idx} src={src} alt={`Desain UI ${idx + 1}`} className="w-full h-72 object-cover rounded-md shadow-sm border border-stone-200" />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {activeTab === 'testing' && (
+                      <div>
+                        <h3 className="text-2xl font-semibold text-stone-700 mb-4">Pengujian Kegunaan</h3>
+                        <p className="text-stone-700 leading-relaxed mb-4">{project.detail.designProcess.testing.text}</p>
+                        <div className="grid md:grid-cols-1 gap-4 mt-4">
+                          {project.detail.designProcess.testing.images.map((src, idx) => (
+                            <img key={idx} src={src} alt={`Pengujian ${idx + 1}`} className="w-full h-48 object-cover rounded-md shadow-sm border border-stone-200" />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </section>
+        
+                {/* Solusi Desain */}
+                <section className="mb-10 pb-6 border-b border-stone-200">
+                  <h2 className="text-3xl font-bold text-stone-800 mb-6 border-b-2 pb-2 border-teal-100">Solusi Desain</h2>
+                  <p className="text-stone-700 leading-relaxed mb-6">{project.detail.solution.text}</p>
+                  <div className="grid md:grid-cols-2 gap-6 mt-6">
+                    {project.detail.solution.images.map((src, idx) => (
+                      <img key={idx} src={src} alt={`Solusi Desain ${idx + 1}`} className="w-full h-96 object-cover rounded-lg shadow-md border border-stone-200" />
+                    ))}
+                  </div>
+                  <h3 className="text-2xl font-semibold text-stone-700 mt-8 mb-4">Fitur Utama & Keputusan Desain</h3>
+                  <ul className="list-disc list-inside text-stone-700 leading-relaxed">
+                    {project.detail.solution.features.map((feature, index) => (
+                      <li key={index} className="mb-2">{feature}</li>
+                    ))}
+                  </ul>
+                </section>
+        
+                {/* Hasil & Dampak */}
+                <section className="mb-10 pb-6 border-b border-stone-200">
+                  <h2 className="text-3xl font-bold text-stone-800 mb-6 border-b-2 pb-2 border-teal-100">Hasil & Dampak</h2>
+                  <p className="text-stone-700 leading-relaxed mb-6">Bagian ini menunjukkan dampak nyata dari solusi desain yang diterapkan, baik melalui metrik kuantitatif maupun kualitatif.</p>
+                  
+                  <div className="grid md:grid-cols-2 gap-6 mt-6 mb-8">
+                    {project.detail.outcomes.metrics.map((metric, index) => (
+                      <div key={index} className="bg-stone-50 p-6 rounded-lg shadow-sm border border-teal-100">
+                        <h3 className="text-xl font-semibold text-teal-700 mb-2">{metric.label}</h3>
+                        <p className="text-4xl font-bold text-stone-800 mb-2">{metric.value}</p>
+                        <p className="text-stone-600">{metric.description}</p>
+                      </div>
+                    ))}
+                  </div>
+        
+                  <h3 className="text-2xl font-semibold text-stone-700 mb-4">Visualisasi Dampak</h3>
+                  <p className="text-stone-700 leading-relaxed mb-4">Grafik di bawah ini memvisualisasikan salah satu metrik kunci yang membaik setelah implementasi desain baru.</p>
+                  <div className="chart-container mt-4 bg-stone-50 p-4 rounded-lg shadow border border-stone-200">
+                    <canvas ref={chartRef} id="impactChart"></canvas>
+                  </div>
+                  <p className="text-sm text-center text-stone-500 mt-2">Grafik yang menunjukkan dampak positif desain terhadap metrik kunci.</p>
+                </section>
+        
+                {/* Pembelajaran & Langkah Selanjutnya */}
+                <section className="mb-10">
+                  <h2 className="text-3xl font-bold text-stone-800 mb-6 border-b-2 pb-2 border-teal-100">Pembelajaran & Langkah Selanjutnya</h2>
+                  <p className="text-stone-700 leading-relaxed mb-6">Refleksi adalah bagian penting dari pertumbuhan sebagai desainer. Berikut adalah beberapa pembelajaran utama dari proyek ini dan potensi langkah selanjutnya.</p>
+                  
+                  <h3 className="text-2xl font-semibold text-stone-700 mb-4">Pembelajaran Utama:</h3>
+                  <ul className="list-disc list-inside text-stone-700 leading-relaxed mb-6">
+                    {project.detail.learnings.main.map((item, index) => (
+                      <li key={index} className="mb-2">{item}</li>
+                    ))}
+                  </ul>
+        
+                  <h3 className="text-2xl font-semibold text-stone-700 mb-4">Tantangan & Solusi:</h3>
+                  <p className="text-stone-700 leading-relaxed mb-6">{project.detail.learnings.challenges}</p>
+        
+                  <h3 className="text-2xl font-semibold text-stone-700 mb-4">Potensi Iterasi & Langkah Selanjutnya:</h3>
+                  <ul className="list-disc list-inside text-stone-700 leading-relaxed">
+                    {project.detail.learnings.future.map((item, index) => (
+                      <li key={index} className="mb-2">{item}</li>
+                    ))}
+                  </ul>
+                </section>
+              </article>
+            </div>
+          );
+        };
+        
+        // Komponen Utama Aplikasi
+        const App = () => {
+          const [currentPage, setCurrentPage] = useState('dashboard'); // 'dashboard' atau 'projectDetail'
+          const [selectedProjectId, setSelectedProjectId] = useState(null);
+        
+          const handleSelectProject = (projectId) => {
+            setSelectedProjectId(projectId);
+            setCurrentPage('projectDetail');
+            window.scrollTo(0, 0); // Gulir ke atas halaman baru
+          };
+        
+          const handleBackToDashboard = () => {
+            setCurrentPage('dashboard');
+            setSelectedProjectId(null);
+            window.scrollTo(0, 0); // Gulir ke atas halaman baru
+          };
+        
+          return (
+            <div className="min-h-screen bg-stone-50 font-sans antialiased text-stone-800">
+              {currentPage === 'dashboard' && (
+                <DashboardPage onSelectProject={handleSelectProject} />
+              )}
+              {currentPage === 'projectDetail' && selectedProjectId && (
+                <ProjectDetailPage projectId={selectedProjectId} onBack={handleBackToDashboard} />
+              )}
+        
+              {/* Footer */}
+              <footer className="bg-stone-800 py-8 text-center text-stone-400">
+                <div className="container mx-auto px-4">
+                  <p>&copy; <span id="currentYear">{new Date().getFullYear()}</span> [Nama Anda]. Semua Hak Dilindungi Undang-Undang.</p>
+                  <p className="mt-2 text-sm">Dibuat dengan &#10084; untuk portofolio UI/UX.</p>
                 </div>
-              </div>
-            )}
-            {activeTab === 'ideation' && (
-              <div>
-                <h3 className="text-2xl font-semibold text-stone-700 mb-4">Analisis & Ideasi</h3>
-                <p className="text-stone-700 leading-relaxed mb-4">{project.detail.designProcess.ideation.text}</p>
-                <div className="grid md:grid-cols-2 gap-4 mt-4">
-                  {project.detail.designProcess.ideation.images.map((src, idx) => (
-                    <img key={idx} src={src} alt={`Analisis & Ideasi ${idx + 1}`} className="w-full h-48 object-cover rounded-md shadow-sm border border-stone-200" />
-                  ))}
-                </div>
-              </div>
-            )}
-            {activeTab === 'wireframing' && (
-              <div>
-                <h3 className="text-2xl font-semibold text-stone-700 mb-4">Wireframing</h3>
-                <p className="text-stone-700 leading-relaxed mb-4">{project.detail.designProcess.wireframing.text}</p>
-                <div className="grid md:grid-cols-2 gap-4 mt-4">
-                  {project.detail.designProcess.wireframing.images.map((src, idx) => (
-                    <img key={idx} src={src} alt={`Wireframing ${idx + 1}`} className="w-full h-64 object-cover rounded-md shadow-sm border border-stone-200" />
-                  ))}
-                </div>
-              </div>
-            )}
-            {activeTab === 'uiDesign' && (
-              <div>
-                <h3 className="text-2xl font-semibold text-stone-700 mb-4">Desain UI & Prototyping</h3>
-                <p className="text-stone-700 leading-relaxed mb-4">{project.detail.designProcess.uiDesign.text}</p>
-                <div className="grid md:grid-cols-1 gap-4 mt-4">
-                  {project.detail.designProcess.uiDesign.images.map((src, idx) => (
-                    <img key={idx} src={src} alt={`Desain UI ${idx + 1}`} className="w-full h-72 object-cover rounded-md shadow-sm border border-stone-200" />
-                  ))}
-                </div>
-              </div>
-            )}
-            {activeTab === 'testing' && (
-              <div>
-                <h3 className="text-2xl font-semibold text-stone-700 mb-4">Pengujian Kegunaan</h3>
-                <p className="text-stone-700 leading-relaxed mb-4">{project.detail.designProcess.testing.text}</p>
-                <div className="grid md:grid-cols-1 gap-4 mt-4">
-                  {project.detail.designProcess.testing.images.map((src, idx) => (
-                    <img key={idx} src={src} alt={`Pengujian ${idx + 1}`} className="w-full h-48 object-cover rounded-md shadow-sm border border-stone-200" />
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </section>
-
-        {/* Solusi Desain */}
-        <section className="mb-10 pb-6 border-b border-stone-200">
-          <h2 className="text-3xl font-bold text-stone-800 mb-6 border-b-2 pb-2 border-teal-100">Solusi Desain</h2>
-          <p className="text-stone-700 leading-relaxed mb-6">{project.detail.solution.text}</p>
-          <div className="grid md:grid-cols-2 gap-6 mt-6">
-            {project.detail.solution.images.map((src, idx) => (
-              <img key={idx} src={src} alt={`Solusi Desain ${idx + 1}`} className="w-full h-96 object-cover rounded-lg shadow-md border border-stone-200" />
-            ))}
-          </div>
-          <h3 className="text-2xl font-semibold text-stone-700 mt-8 mb-4">Fitur Utama & Keputusan Desain</h3>
-          <ul className="list-disc list-inside text-stone-700 leading-relaxed">
-            {project.detail.solution.features.map((feature, index) => (
-              <li key={index} className="mb-2">{feature}</li>
-            ))}
-          </ul>
-        </section>
-
-        {/* Hasil & Dampak */}
-        <section className="mb-10 pb-6 border-b border-stone-200">
-          <h2 className="text-3xl font-bold text-stone-800 mb-6 border-b-2 pb-2 border-teal-100">Hasil & Dampak</h2>
-          <p className="text-stone-700 leading-relaxed mb-6">Bagian ini menunjukkan dampak nyata dari solusi desain yang diterapkan, baik melalui metrik kuantitatif maupun kualitatif.</p>
-          
-          <div className="grid md:grid-cols-2 gap-6 mt-6 mb-8">
-            {project.detail.outcomes.metrics.map((metric, index) => (
-              <div key={index} className="bg-stone-50 p-6 rounded-lg shadow-sm border border-teal-100">
-                <h3 className="text-xl font-semibold text-teal-700 mb-2">{metric.label}</h3>
-                <p className="text-4xl font-bold text-stone-800 mb-2">{metric.value}</p>
-                <p className="text-stone-600">{metric.description}</p>
-              </div>
-            ))}
-          </div>
-
-          <h3 className="text-2xl font-semibold text-stone-700 mb-4">Visualisasi Dampak</h3>
-          <p className="text-stone-700 leading-relaxed mb-4">Grafik di bawah ini memvisualisasikan salah satu metrik kunci yang membaik setelah implementasi desain baru.</p>
-          <div className="chart-container mt-4 bg-stone-50 p-4 rounded-lg shadow border border-stone-200">
-            <canvas ref={chartRef} id="impactChart"></canvas>
-          </div>
-          <p className="text-sm text-center text-stone-500 mt-2">Grafik yang menunjukkan dampak positif desain terhadap metrik kunci.</p>
-        </section>
-
-        {/* Pembelajaran & Langkah Selanjutnya */}
-        <section className="mb-10">
-          <h2 className="text-3xl font-bold text-stone-800 mb-6 border-b-2 pb-2 border-teal-100">Pembelajaran & Langkah Selanjutnya</h2>
-          <p className="text-stone-700 leading-relaxed mb-6">Refleksi adalah bagian penting dari pertumbuhan sebagai desainer. Berikut adalah beberapa pembelajaran utama dari proyek ini dan potensi langkah selanjutnya.</p>
-          
-          <h3 className="text-2xl font-semibold text-stone-700 mb-4">Pembelajaran Utama:</h3>
-          <ul className="list-disc list-inside text-stone-700 leading-relaxed mb-6">
-            {project.detail.learnings.main.map((item, index) => (
-              <li key={index} className="mb-2">{item}</li>
-            ))}
-          </ul>
-
-          <h3 className="text-2xl font-semibold text-stone-700 mb-4">Tantangan & Solusi:</h3>
-          <p className="text-stone-700 leading-relaxed mb-6">{project.detail.learnings.challenges}</p>
-
-          <h3 className="text-2xl font-semibold text-stone-700 mb-4">Potensi Iterasi & Langkah Selanjutnya:</h3>
-          <ul className="list-disc list-inside text-stone-700 leading-relaxed">
-            {project.detail.learnings.future.map((item, index) => (
-              <li key={index} className="mb-2">{item}</li>
-            ))}
-          </ul>
-        </section>
-      </article>
-    </div>
-  );
-};
-
-// Komponen Utama Aplikasi
-const App = () => {
-  const [currentPage, setCurrentPage] = useState('dashboard'); // 'dashboard' atau 'projectDetail'
-  const [selectedProjectId, setSelectedProjectId] = useState(null);
-
-  const handleSelectProject = (projectId) => {
-    setSelectedProjectId(projectId);
-    setCurrentPage('projectDetail');
-    window.scrollTo(0, 0); // Gulir ke atas halaman baru
-  };
-
-  const handleBackToDashboard = () => {
-    setCurrentPage('dashboard');
-    setSelectedProjectId(null);
-    window.scrollTo(0, 0); // Gulir ke atas halaman baru
-  };
-
-  return (
-    <div className="min-h-screen bg-stone-50 font-sans antialiased text-stone-800">
-      {currentPage === 'dashboard' && (
-        <DashboardPage onSelectProject={handleSelectProject} />
-      )}
-      {currentPage === 'projectDetail' && selectedProjectId && (
-        <ProjectDetailPage projectId={selectedProjectId} onBack={handleBackToDashboard} />
-      )}
-
-      {/* Footer */}
-      <footer className="bg-stone-800 py-8 text-center text-stone-400">
-        <div className="container mx-auto px-4">
-          <p>&copy; <span id="currentYear">{new Date().getFullYear()}</span> [Nama Anda]. Semua Hak Dilindungi Undang-Undang.</p>
-          <p className="mt-2 text-sm">Dibuat dengan &#10084; untuk portofolio UI/UX.</p>
-        </div>
-      </footer>
-    </div>
-  );
-};
-
-export default App;
+              </footer>
+            </div>
+          );
+        };
+        
+        // Render aplikasi React ke DOM
+        const rootElement = document.getElementById('root');
+        if (rootElement) {
+            ReactDOM.createRoot(rootElement).render(React.createElement(App, null));
+        }
+        
+    </script>
+</body>
+</html>
